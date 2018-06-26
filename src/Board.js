@@ -14,18 +14,16 @@ class Board extends Component {
         [ 1,1,1 ]
       ],
       nextPlay: 3,
-      winner: null
     }
   }
 
   clickTile = (rowIndex, colIndex) => {
 
-    if (this.state.board[rowIndex][colIndex] === 1){
+    if (this.state.board[rowIndex][colIndex] === 1 && this.checkIfWin() !== 3 && this.checkIfWin() !== 5){
       
       const nextPlay = this.getNextPlay()
       this.setState((state) => {
         return { ...state, ...{
-          winner: this.checkIfWin(),
           board: state.board.map((row, iRowIndex) => {
             return row.map((value, iColIndex) => {
               if ((iRowIndex === rowIndex && iColIndex === colIndex))
@@ -100,8 +98,15 @@ class Board extends Component {
     }
 
     return (
-      <div className="container board mt-5 text-center">
-        <p>The winner is {mapping[this.state.winner]}</p>
+      <div className="container board mt-5 text-center p-5">
+        {
+          this.checkIfWin() ? 
+          <div> 
+            <p className="mb-5">{mapping[this.checkIfWin()]} won the game</p> 
+            <btn className="m-3 btn btn-success">Play Again</btn> 
+          </div>
+          : <p className="mb-5">Tic Tac Tie</p> 
+        }
         {
           this.state.board.map((row, rowIndex) => 
             (

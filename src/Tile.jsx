@@ -3,7 +3,7 @@ import React from 'react'
 const mapping = {
   3: 'X',
   5: 'O',
-  1: '-'
+  1: ' '
 }
 
 const Tile = (props) => {

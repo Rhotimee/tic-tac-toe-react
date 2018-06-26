@@ -1,8 +1,11 @@
  .board {
    font-size: 25px;
-
- }
+   height: 30rem;
+   width: 35rem;
+  }
 
  .col {
-   padding-top: 60px;
+   padding-top: 70px;
+   border: 1px solid rgb(54, 51, 51);
+   padding-bottom: 70px;
  }
