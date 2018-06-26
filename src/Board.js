@@ -14,6 +14,7 @@ class Board extends Component {
         [ 1,1,1 ]
       ],
       nextPlay: 3,
+      counter: 0,
     }
   }
 
@@ -24,6 +25,7 @@ class Board extends Component {
       const nextPlay = this.getNextPlay()
       this.setState((state) => {
         return { ...state, ...{
+          counter: state.counter + 1,
           board: state.board.map((row, iRowIndex) => {
             return row.map((value, iColIndex) => {
               if ((iRowIndex === rowIndex && iColIndex === colIndex))
@@ -80,6 +82,16 @@ class Board extends Component {
 
   }
 
+  playAgain = () => {
+    this.setState({
+      board: [
+        [ 1,1,1 ],
+        [ 1,1,1 ],
+        [ 1,1,1 ]
+      ],
+      counter: 0
+    })
+  }
   
   getNextPlay = () => {
     const nextPlay = this.state.nextPlay;
@@ -94,18 +106,27 @@ class Board extends Component {
     const mapping = {
       3: 'X',
       5: 'O',
-      1: '-'
+      1: ' '
     }
 
     return (
-      <div className="container board mt-5 text-center p-5">
+      <div className="container board mt-4 text-center p-5">
+        <h4 className="m-3">Tic Tac Toe</h4>
         {
           this.checkIfWin() ? 
           <div> 
-            <p className="mb-5">{mapping[this.checkIfWin()]} won the game</p> 
-            <btn className="m-3 btn btn-success">Play Again</btn> 
+            <p className="mt-3">{mapping[this.checkIfWin()]} won the game</p> 
+            <button className="mb-3 btn btn-success" onClick={() => this.playAgain()}>Play Again</button> 
           </div>
-          : <p className="mb-5">Tic Tac Tie</p> 
+          : null
+        }
+        {
+          this.state.counter === 9 && !this.checkIfWin() ?
+          <div> 
+            <p className="mt-3">Draw</p> 
+            <button className="mb-3 btn btn-success" onClick={() => this.playAgain()}>Play Again</button> 
+          </div> 
+           : null
         }
         {
           this.state.board.map((row, rowIndex) => 
