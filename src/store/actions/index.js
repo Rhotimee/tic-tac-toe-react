@@ -5,7 +5,4 @@ export const updateBoard = (rowIndex, colIndex, nextPlay) => ({
   nextPlay
 });
 
-export const incrementCounter = (counter) => ({
-  type: 'Increment_Counter',
-  counter: counter++
-})
+export const resetBoard = () => ({ type: 'Reset' })

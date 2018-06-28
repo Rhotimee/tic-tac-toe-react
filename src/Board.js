@@ -1,41 +1,23 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import logo from './logo.svg';
 import './Board.css';
 import Tile from './Tile'
+import { updateBoard, resetBoard } from './store/actions'
+import { store } from './store'
 
 class Board extends Component {
   constructor(props){
     super (props);
-
-    this.state = {
-      board: [
-        [ 1,1,1 ],
-        [ 1,1,1 ],
-        [ 1,1,1 ]
-      ],
-      nextPlay: 3,
-      counter: 0,
-    }
   }
 
   clickTile = (rowIndex, colIndex) => {
 
-    if (this.state.board[rowIndex][colIndex] === 1 && this.checkIfWin() !== 3 && this.checkIfWin() !== 5){
+    if (this.props.board[rowIndex][colIndex] === 1 && this.checkIfWin() !== 3 && this.checkIfWin() !== 5){
       
       const nextPlay = this.getNextPlay()
-      this.setState((state) => {
-        return { ...state, ...{
-          counter: state.counter + 1,
-          board: state.board.map((row, iRowIndex) => {
-            return row.map((value, iColIndex) => {
-              if ((iRowIndex === rowIndex && iColIndex === colIndex))
-                return nextPlay
-              
-              else return value 
-            })
-          })
-        }  }
-      })
+
+      this.props.updateBoard(rowIndex, colIndex, nextPlay)
     }
   }
 
@@ -45,15 +27,17 @@ class Board extends Component {
   }
 
   checkIfWin = () => {
-    const a = this.state.board[0][0]
-    const b = this.state.board[0][1]
-    const c = this.state.board[0][2]
-    const d = this.state.board[1][0]
-    const e = this.state.board[1][1]
-    const f = this.state.board[1][2]
-    const g = this.state.board[2][0]
-    const h = this.state.board[2][1]
-    const i = this.state.board[2][2]
+    const state = this.props
+
+    const a = state.board[0][0]
+    const b = state.board[0][1]
+    const c = state.board[0][2]
+    const d = state.board[1][0]
+    const e = state.board[1][1]
+    const f = state.board[1][2]
+    const g = state.board[2][0]
+    const h = state.board[2][1]
+    const i = state.board[2][2]
 
     if (this.sumNumbers(a, b, c) === 27 || this.sumNumbers(a, b, c) === 125){
       return a
@@ -83,18 +67,11 @@ class Board extends Component {
   }
 
   playAgain = () => {
-    this.setState({
-      board: [
-        [ 1,1,1 ],
-        [ 1,1,1 ],
-        [ 1,1,1 ]
-      ],
-      counter: 0
-    })
+    return store.dispatch(resetBoard())
   }
   
   getNextPlay = () => {
-    const nextPlay = this.state.nextPlay;
+    const nextPlay = this.props.nextPlay;
     this.setState({
       nextPlay: (nextPlay === 3) ? 5 : 3 
     });
@@ -121,7 +98,7 @@ class Board extends Component {
           : null
         }
         {
-          this.state.counter === 9 && !this.checkIfWin() ?
+          this.props.counter === 9 && !this.checkIfWin() ?
           <div> 
             <p className="mt-3">Draw</p> 
             <button className="mb-3 btn btn-success" onClick={() => this.playAgain()}>Play Again</button> 
@@ -129,7 +106,7 @@ class Board extends Component {
            : null
         }
         {
-          this.state.board.map((row, rowIndex) => 
+          this.props.board.map((row, rowIndex) => 
             (
             <div className="row" key={rowIndex}>
               {
@@ -153,4 +130,19 @@ class Board extends Component {
   }
 }
 
-export default Board;
+const mapStateToProps = (state) => {
+  return {
+    board: state.board,
+    nextPlay: state.nextPlay,
+    counter: state.counter
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateBoard: (rowIndex, colIndex, nextPlay) => dispatch(updateBoard(rowIndex, colIndex, nextPlay)),
+    resetBoard: () => dispatch(resetBoard())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Board);
