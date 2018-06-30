@@ -1,5 +1,3 @@
-import initialState from '../state'
-
 export default function game (state, action) {
   switch (action.type) {
     case 'Update_Board':

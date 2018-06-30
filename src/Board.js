@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import logo from './logo.svg';
 import './Board.css';
 import Tile from './Tile'
 import { updateBoard, resetBoard } from './store/actions'
 import { store } from './store'
 
 class Board extends Component {
-  constructor(props){
-    super (props);
-  }
+
 
   clickTile = (rowIndex, colIndex) => {
+    const checkWin = this.checkIfWin()
 
-    if (this.props.board[rowIndex][colIndex] === 1 && this.checkIfWin() !== 3 && this.checkIfWin() !== 5){
+    if (this.props.board[rowIndex][colIndex] === 1 && checkWin !== 3 && checkWin !== 5){
       
       const nextPlay = this.getNextPlay()
 
@@ -86,19 +84,25 @@ class Board extends Component {
       1: ' '
     }
 
+    const checkWin = this.checkIfWin()
+    const nextPlay = this.props.nextPlay
+
     return (
-      <div className="container board mt-4 text-center p-5">
-        <h4 className="m-3">Tic Tac Toe</h4>
+      <div className="container board mt-2 text-center p-3">
+        <h3 className="m-3 ">Tic Tac Toe</h3>
         {
-          this.checkIfWin() ? 
+          !checkWin && nextPlay ? <p>{mapping[nextPlay]} to play</p> : null
+        }
+        {
+          checkWin ? 
           <div> 
-            <p className="mt-3">{mapping[this.checkIfWin()]} won the game</p> 
-            <button className="mb-3 btn btn-success" onClick={() => this.playAgain()}>Play Again</button> 
+            <p className="mt-3">{mapping[checkWin]} won the game</p> 
+            <button className="mb-3 btn btn-primary" onClick={() => this.playAgain()}>Play Again</button> 
           </div>
           : null
         }
         {
-          this.props.counter === 9 && !this.checkIfWin() ?
+          this.props.counter === 9 && !checkWin ?
           <div> 
             <p className="mt-3">Draw</p> 
             <button className="mb-3 btn btn-success" onClick={() => this.playAgain()}>Play Again</button> 
