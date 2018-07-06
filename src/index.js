@@ -1,8 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
 import './index.css';
 import Board from './Board';
 import registerServiceWorker from './registerServiceWorker';
+import { store } from './store'
 
-ReactDOM.render(<Board />, document.getElementById('root'));
+render(
+  <Provider store={store}>
+    <Board />
+  </Provider>, 
+  document.getElementById('root')
+);
 registerServiceWorker();
